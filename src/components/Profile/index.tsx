@@ -3,39 +3,64 @@ import { CardContent, CardDetails, ProfileCard, ProfileContainer } from "../../c
 import { faArrowUpRightFromSquare, faBuilding, faUserGroup } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+interface ProfileProps {
+  name: string
+  html_url: string
+  bio: string
+  login: string
+  company: string
+  followers: string
+  avatar_url: string
+}
 
 export function Profile() {
+  const [profile, setProfile] = useState<ProfileProps>({} as ProfileProps)
+
+
+  async function UserProfileData() {
+    const data = await fetch('https://api.github.com/users/Bellorico323').then((response) => {
+      return response.json()
+    })
+    setProfile(data)
+  }
+
+  useEffect(() => {
+    UserProfileData()
+  },[])
+
 
   return (
     <ProfileContainer>
       <ProfileCard>
-       <img src="https://github.com/Bellorico323.png" alt="Profile photo" />
+       <img src={profile.avatar_url} alt="Profile photo" />
        <CardContent>
         <header>
-          <h2>Murillo Orico</h2>
-          <Link to="https://reactrouter.com/en/main/components/link" target="_blank">
+          <h2>{profile.name}</h2>
+          <Link to={profile.html_url} target="_blank">
             GITHUB
           <FontAwesomeIcon icon={faArrowUpRightFromSquare}/>
           </Link>
         </header>
         <div>
-          <p>Tristique volutpat pulvinar vel massa, pellentesque egestas. Eu viverra massa quam dignissim aenean malesuada suscist. Nunc, volutpat pulvinar vel mass.</p>
+          <p>{profile.bio}</p>
         </div>
         <footer>
           
           <CardDetails>
             <FontAwesomeIcon icon={faGithub} />
-            cameronwll
+            {profile.login}
           </CardDetails>
 
           <CardDetails>
             <FontAwesomeIcon icon={faBuilding} />
-            Rocketseat
+            {profile.company}
           </CardDetails>  
 
           <CardDetails>
             <FontAwesomeIcon icon={faUserGroup} />
-            32 seguidores
+            {profile.followers}
           </CardDetails>  
 
         </footer>

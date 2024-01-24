@@ -66,6 +66,11 @@ export const CardContent = styled.div`
       gap: 0.5rem;
     }
   }
+
+  > div {
+      height: 52px;
+    }
+
   > footer {
       margin-top: 1.5rem;
 

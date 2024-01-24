@@ -25,6 +25,7 @@ export const Post = styled.div`
   gap: 20px;
   border: 2px solid transparent;
   transition: border-color 0.4s ease;
+  cursor: pointer;
 
   > header {
     display: flex;
@@ -44,6 +45,7 @@ export const Post = styled.div`
       color: ${props => props.theme['base-span']};
       align-self: self-start;
       margin-top: 6px;
+      flex-shrink: 0;
     }
   }
 
