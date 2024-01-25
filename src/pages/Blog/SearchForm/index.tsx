@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SearchFormContainer } from "./styles";
 import * as z from 'zod'
 import { useForm } from "react-hook-form";
+import { usePosts } from "../../../hooks/usePosts";
 
 const searchFormSchema = z.object({
   query: z.string(),
@@ -10,6 +11,8 @@ const searchFormSchema = z.object({
 type SearchFormInputs = z.infer<typeof searchFormSchema>
 
 export function SearchForm() {
+  const {posts} = usePosts()
+
   const {
     register, 
     watch,
@@ -21,7 +24,7 @@ export function SearchForm() {
   console.log(query)
   return (
     <SearchFormContainer>
-      <label htmlFor="query">Publicações  <span>6 publicações</span></label>
+      <label htmlFor="query">Publicações  <span>{posts.length} publicações</span></label>
       <input 
         type="text" 
         placeholder="Buscar conteúdo"

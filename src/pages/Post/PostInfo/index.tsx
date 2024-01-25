@@ -3,9 +3,26 @@ import { ProfileContainer } from "../../../components/Profile/styles"
 import { PostCard, PostCardTitle, PostDetails } from "./styles"
 import { faArrowUpRightFromSquare, faCalendarDay, faChevronLeft, faComment } from "@fortawesome/free-solid-svg-icons"
 import { faGithub } from "@fortawesome/free-brands-svg-icons"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
+import { usePosts } from "../../../hooks/usePosts"
+import { useEffect } from "react"
+import { formatDistanceToNow } from "date-fns"
+import { ptBR } from "date-fns/locale/pt-BR"
 
 export function PostInfo() {
+  const {data, fetchSelectedIssue} = usePosts()
+
+  const { number } = useParams();
+
+useEffect(() => {
+  fetchSelectedIssue(number)
+}, [])
+
+if (data && data.created_at){
+  const ConvertToDate = new Date(data.created_at)
+  console.log(ConvertToDate)
+}
+
   return (
  <ProfileContainer>
     <PostCard>
@@ -14,28 +31,34 @@ export function PostInfo() {
           <FontAwesomeIcon icon={faChevronLeft}/>
           VOLTAR
           </Link>
-        <Link to="https://reactrouter.com/en/main/components/link">
+        <Link to="/" target="_blank">
           VER NO GITHUB
           <FontAwesomeIcon icon={faArrowUpRightFromSquare}/>
         </Link>
       </header> 
 
       <PostCardTitle>
-        <h1>JavaScript data types and data structures</h1>
+        <h1>{data.title}</h1>
         <div>
         <PostDetails>
             <FontAwesomeIcon icon={faGithub} />
-            cameronwll
+            {data.login ? data.login : 'dado nao carrega'}
           </PostDetails>
 
           <PostDetails> 
             <FontAwesomeIcon icon={faCalendarDay} />
-            Há 1 dia
+
+              {(data && data.created_at) ?    (
+              formatDistanceToNow(data.created_at, {
+              addSuffix: true,
+              locale: ptBR
+            }) ) : 'bugado'} 
+         
           </PostDetails>  
 
           <PostDetails>
             <FontAwesomeIcon icon={faComment} />
-            32 comentários
+            {data.comments} comentários
           </PostDetails>  
           </div>
       </PostCardTitle>

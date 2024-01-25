@@ -1,31 +1,14 @@
-import { useEffect, useState } from "react";
 import { Profile } from "../../components/Profile";
 import { SearchForm } from "./SearchForm";
 import { BlogContainer, Post, PostsGrid } from "./styles";
 import { formatDistanceToNow } from "date-fns";
 import {ptBR} from 'date-fns/locale/pt-BR';
+import { usePosts } from "../../hooks/usePosts";
+import { Link } from "react-router-dom";
 
-interface PostsProps {
-  body: string
-  title: string
-  created_at: Date
-  id: number
-}
 
 export function Blog() {
-  const [Posts, setPosts] = useState<PostsProps[]>([])
-
-  async function getPosts() {
-    const data = await fetch('https://api.github.com/search/issues?q=repo:Bellorico323/Github-Blog').then((response) => {
-      return response.json()
-    })
-    setPosts(data.items)
-  }
-
-  useEffect(() => {
-    getPosts()
-  },[]) 
-
+  const { posts } = usePosts()
 
   return (
     <div>
@@ -35,9 +18,10 @@ export function Blog() {
         <SearchForm />
 
         <PostsGrid>
-          {Posts.map((post) => {
+          {posts.map((post) => {
             return (
-              <Post key={post.id}>
+              <Post key={post.number}>
+                <Link to={`/post/${post.number}`}>
               <header>
                 <h2>{post.title}</h2>
                 <span>{formatDistanceToNow(post.created_at, {
@@ -46,6 +30,7 @@ export function Blog() {
                 })}</span>
               </header>
                 <p>{post.body}</p>
+                </Link>
               </Post>
             )
           })}

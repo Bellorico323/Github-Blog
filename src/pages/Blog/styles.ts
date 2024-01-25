@@ -22,16 +22,28 @@ export const Post = styled.div`
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
   border: 2px solid transparent;
   transition: border-color 0.4s ease;
   cursor: pointer;
 
-  > header {
+  a {
+    ${mixins.fonts.textM}; 
+    text-transform: none;
+    text-decoration: none;
+    font-size: 1rem;
+    color: ${props => props.theme['base-text']};
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 20px;
 
 
     > h2 {
