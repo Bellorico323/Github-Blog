@@ -11,25 +11,28 @@ const searchFormSchema = z.object({
 type SearchFormInputs = z.infer<typeof searchFormSchema>
 
 export function SearchForm() {
-  const {posts} = usePosts()
+  const {posts, getPosts} = usePosts()
 
   const {
-    register, 
-    watch,
+    register,
+    handleSubmit
   } = useForm<SearchFormInputs>({
     resolver: zodResolver(searchFormSchema)
   })
 
-  const query = watch('query')
-  console.log(query)
+  async function handleSearchPosts(data: SearchFormInputs) {
+    await getPosts(data.query)
+  }
+
   return (
-    <SearchFormContainer>
-      <label htmlFor="query">Publicações  <span>{posts.length} publicações</span></label>
-      <input 
-        type="text" 
-        placeholder="Buscar conteúdo"
-        {...register('query')}
-        autoComplete="off"
+    <SearchFormContainer onSubmit={handleSubmit(handleSearchPosts)}>
+        <label htmlFor="query">Publicações  <span>{posts.length} publicações</span></label>
+          <input
+            type="text"
+            placeholder="Buscar conteúdo"
+            autoComplete="off"
+            onKeyDown={() => handleSubmit} 
+            {...register('query')}
       />
     </SearchFormContainer>
   );

@@ -1,21 +1,11 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { api } from "../lib/axios";
+import { searchApi } from "../lib/axios";
 
 export interface PostProps {
   body: string
   title: string
-  created_at: Date
+  created_at: string
   number: number
-}
-
-
-export interface PostPage extends PostProps {
-  comments: number
-  login: string
-  user: {
-    html_url: string
-    login: string
-  }
 }
 
 interface PostProviderProps {
@@ -23,30 +13,28 @@ interface PostProviderProps {
 }
 
 interface PostContextType {
-  data: PostPage
   posts: PostProps[]
-  fetchSelectedIssue: (query: string | undefined) => Promise<void>
+  getPosts: (query: string) => Promise<void> 
 }
 
 export const PostContext = createContext({} as PostContextType)
 
 export function PostsProvider({children}: PostProviderProps) {
   const [posts, setPosts] = useState<PostProps[]>([])
-  const [data, setData] = useState({} as PostPage)
 
-  async function getPosts() {
-    const response = await api.get(`issues`)
-    setPosts(response.data)
-  }
+  async function getPosts(query?: string) {
+    const params: {q?: string} = {}
 
+    if(query) {
+      params.q = `repo:Bellorico323/Github-Blog ${query}`
+    } else {
+      params.q = `repo:Bellorico323/Github-Blog is:issue`
+    }
 
-  async function fetchSelectedIssue(query: string | undefined) {
-    const response = await api.get(`issues/${query}`, {
-      params: {
-        q: query
-      }
+    const response = await searchApi.get('/search/issues', {
+      params,
     })
-    setData(response.data)
+    setPosts(response.data.items)
   }
 
   useEffect(() => {
@@ -58,8 +46,7 @@ export function PostsProvider({children}: PostProviderProps) {
     <PostContext.Provider
       value={{
         posts,
-        fetchSelectedIssue,
-        data
+        getPosts
       }}
     >
       {children}

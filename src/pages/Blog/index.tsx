@@ -4,11 +4,17 @@ import { BlogContainer, Post, PostsGrid } from "./styles";
 import { formatDistanceToNow } from "date-fns";
 import {ptBR} from 'date-fns/locale/pt-BR';
 import { usePosts } from "../../hooks/usePosts";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export function Blog() {
   const { posts } = usePosts()
+
+  const navigate = useNavigate()
+
+  function handleNavigation(postNumber: number) {
+    navigate(`/post/${postNumber}`)
+  }
 
   return (
     <div>
@@ -20,8 +26,7 @@ export function Blog() {
         <PostsGrid>
           {posts.map((post) => {
             return (
-              <Post key={post.number}>
-                <Link to={`/post/${post.number}`}>
+              <Post key={post.number} onClick={() => handleNavigation(post.number)}>
               <header>
                 <h2>{post.title}</h2>
                 <span>{formatDistanceToNow(post.created_at, {
@@ -30,7 +35,6 @@ export function Blog() {
                 })}</span>
               </header>
                 <p>{post.body}</p>
-                </Link>
               </Post>
             )
           })}

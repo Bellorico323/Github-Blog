@@ -26,18 +26,6 @@ export const Post = styled.div`
   transition: border-color 0.4s ease;
   cursor: pointer;
 
-  a {
-    ${mixins.fonts.textM}; 
-    text-transform: none;
-    text-decoration: none;
-    font-size: 1rem;
-    color: ${props => props.theme['base-text']};
-
-    &:focus {
-      box-shadow: none;
-    }
-  }
-
    header {
     display: flex;
     justify-content: space-between;
