@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext,  useEffect, useState } from "react";
 import { searchApi } from "../lib/axios";
 
 export interface PostProps {
